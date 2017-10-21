@@ -11,6 +11,7 @@ struct Node
 	int sum;
 	int min;
 	int max;
+	int minGap;
 };
 
 struct Node *start=NULL;
@@ -131,6 +132,52 @@ int findFeasibleNumber(struct Node *t)
 	}
 }
 
+void updateMinGap(struct Node *t,struct Node *parent)
+{
+	if(parent==NULL) return;
+	int gap[4],min,i;
+	for(i=0;i<4;i++) gap[i]=-1;
+	i=0;
+	if(t->position==0)
+	{
+		gap[i]=t->minGap;
+	}
+	i++;
+	if(t->position==1)
+	{
+		gap[i]=t->minGap;
+	}
+	i++;
+	if(parent->left!=NULL)
+	{
+		gap[i]=abs(parent->number-parent->left->max);
+	}
+	i++;
+	if(parent->right!=NULL)
+	{
+		gap[i]=abs(parent->right->min-parent->number);
+	}
+	min=98765;
+	for(i=0;i<4;i++)
+	{
+		if(gap[i]!=-1 && min>gap[i])
+		{
+			min=gap[i];
+		}
+	//	printf("Gap %d----> min %d\n",gap[i],min);
+	}
+	int temp=parent->minGap;
+	if(temp==min)
+	{
+		return;
+	}
+	else
+	{
+		parent->minGap=min;
+		updateMinGap(parent,parent->parent);
+	}
+}
+
 void balanceTree(struct Node *t,int num)
 {
 	struct Node *p,*o;
@@ -140,7 +187,13 @@ void balanceTree(struct Node *t,int num)
 		char *c=findRotationType(t,num);
 		if(strcmp("000",c)==0 || strcmp("100",c)==0)
 		{
+			int z=0;
 			p=t->left;
+			if(p->right==NULL)
+			{
+				t->minGap=-1;
+			}
+			else 	z=1;
 			if(t->parent!=NULL)
 			{
 				if (t->position==0)
@@ -173,7 +226,14 @@ void balanceTree(struct Node *t,int num)
 			p->count=countNumberOfNodes(p);
 			t->sum=findSum(t);
 			p->sum=findSum(p);
-			
+			if(z==0) 
+			{ 
+				updateMinGap(t,p);
+			}
+			else 
+			{
+				updateMinGap(t->left,t);
+			}
 			if(o!=NULL)
 			{
 				struct Node *yy=findVictim(o);
@@ -187,7 +247,13 @@ void balanceTree(struct Node *t,int num)
 		}
 		else if(strcmp("111",c)==0 || strcmp("011",c)==0) 
 		{
+			int z=0;
 			p=t->right;
+			if(p->left==NULL)
+			{
+				t->minGap=-1;
+			}
+			else z=1;
 			if(t->parent!=NULL)
 			{
 				if (t->position==1)
@@ -220,6 +286,8 @@ void balanceTree(struct Node *t,int num)
 			p->count=countNumberOfNodes(p);
 			t->sum=findSum(t);
 			p->sum=findSum(p);
+			if(z==0) updateMinGap(t,p);
+			else updateMinGap(t->right,t);
 			if(o!=NULL)
 			{
 				struct Node *yy=findVictim(o);
@@ -233,9 +301,14 @@ void balanceTree(struct Node *t,int num)
 		}
 		else if(strcmp("010",c)==0 || strcmp("110",c)==0)
 		{
+			int x=0,y=0;
 			struct Node *q;
 			p=t->right;
 			q=p->left;
+			if(q->left!=NULL) x=1;
+			if(q->right!=NULL) y=1;
+			if(t->left==NULL) t->minGap=-1;
+			if(p->right==NULL) p->minGap=-1;
 			if(t->position==0)
 			{
 				if(t->parent!=NULL)
@@ -291,6 +364,12 @@ void balanceTree(struct Node *t,int num)
 			t->sum=findSum(t);
 			p->sum=findSum(p);
 			q->sum=findSum(q);
+
+			if(x==0) updateMinGap(t,q);
+			else updateMinGap(t->right,t);
+			if(y==0) updateMinGap(p,q);
+			else updateMinGap(p->left,p);
+
 			if(o!=NULL)
 			{
 				struct Node *yy=findVictim(o);
@@ -303,9 +382,15 @@ void balanceTree(struct Node *t,int num)
 		}
 		else if(strcmp("001",c)==0 || strcmp("101",c)==0)
 		{
+			int x=0,y=0;
 			struct Node *q;
 			p=t->left;
 			q=p->right;
+
+			if(q->left!=NULL) x=1;
+			if(q->right!=NULL) y=1;
+			if(p->left==NULL) p->minGap=-1;
+			if(t->right==NULL) t->minGap=-1;
 			if(t->position==0)
 			{
 				if(t->parent!=NULL)
@@ -359,6 +444,12 @@ void balanceTree(struct Node *t,int num)
 			t->sum=findSum(t);
 			p->sum=findSum(p);
 			q->sum=findSum(q);
+
+			if(x==0) updateMinGap(p,q);
+			else updateMinGap(p->right,p);
+			if(y==0) updateMinGap(t,q);
+			else updateMinGap(t->left,t);
+
 			if(o!=NULL)
 			{
 				struct Node *yy=findVictim(o);
@@ -541,6 +632,7 @@ void addNode(int num)
 	t->sum=t->number;
 	t->min=num;
 	t->max=num;
+	t->minGap=-1;
 	if(start==NULL)
 	{
 		start=t;
@@ -568,6 +660,7 @@ void addNode(int num)
 				{
 					j->max=num;
 				}
+				updateMinGap(t,j);
 				struct Node *temp=findVictim(t);
 				if(temp!=NULL)
 				balanceTree(temp,num);
@@ -605,6 +698,7 @@ void addNode(int num)
 				{
 					j->max=num;
 				}
+				updateMinGap(t,j);
 				struct Node *temp=findVictim(t);
 				if(temp!=NULL)
 				balanceTree(temp,num);
@@ -639,15 +733,11 @@ void changeCount(struct Node *t)
 
 void changeSum(struct Node *t,int num)
 {
-if(t!=NULL)
-	printf("t->num $%d\n",t->number);
 	while(t)
 	{
 		t->sum=t->sum-num;
 		t=t->parent;
-		printf("t->number");
 	}
-	printf("sdfsdf\n");
 }
 
 void updateMinMax(struct Node *t,int position,int num)
@@ -731,6 +821,35 @@ void removeNode(int num)
 			{
 				updateMinMax(j,1,j->number);
 			}
+
+			int temp1=j->minGap;
+			if(t->position==0)
+			{
+				if(j->right!=NULL)
+				{
+					if(j->right->minGap!=-1 && temp1>j->right->minGap)	j->minGap=j->right->minGap;
+					if(j->parent!=NULL) updateMinGap(j,j->parent);
+				}
+				else
+				{
+					j->minGap=-1;
+					if(j->parent!=NULL) updateMinGap(j,j->parent);
+				}
+			}
+			else
+			{
+				if(j->left!=NULL)
+				{
+					if(j->left->minGap && temp1>j->left->minGap)	j->minGap=j->left->minGap;
+					if(j->parent!=NULL) updateMinGap(j,j->parent);
+				}
+				else
+				{
+					j->minGap=-1;
+					if(j->parent!=NULL) updateMinGap(j,j->parent);
+				}
+			}
+
 			free(t);
 			struct Node *temp=findVictim(j);
 	
@@ -771,10 +890,12 @@ void removeNode(int num)
 			if(t->position==0)
 			{
 				updateMinMax(j,0,t->min);
+				updateMinGap(j->left,j);
 			}
 			else
 			{
 				updateMinMax(j,1,t->max);
+				updateMinGap(j->right,j);
 			}
 			free(t);
 			struct Node * temp=findVictim(j);
@@ -816,10 +937,12 @@ void removeNode(int num)
 			if(t->position==0)
 			{
 				updateMinMax(j,0,t->min);
+				updateMinGap(j->left,j);
 			}
 			else
 			{
 				updateMinMax(j,1,t->max);
+				updateMinGap(j->right,j);
 			}
 			free(t);
 			struct Node * temp=findVictim(j);
@@ -845,6 +968,11 @@ void removeNode(int num)
 	if (temp->left!=NULL)
 	{
 		temp->left->parent=temp->parent;
+		temp->parent->max=temp->left->max;
+	}
+	else
+	{
+		temp->parent->max=temp->parent->number;
 	}
 	//printf("One\n");
 	//printf("after temp->left!=null\n");
@@ -912,15 +1040,18 @@ void removeNode(int num)
 	}
 	//temp->sum=t->sum;
 	//temp->sum=findSum(temp);
-	if(temp->left==NULL)
+	temp->min=t->min;
+	temp->max=t->max;
+
+	if(temp->left!=NULL)
 	{
-		temp->min=t->min;
-		temp->max=t->max;
+		if(temp->left->minGap>temp->right->minGap) temp->minGap=temp->right->minGap;
+		else temp->minGap=temp->left->minGap;		
 	}
 	else
-	{
-		
-	}
+		temp->minGap=temp->right->minGap;
+	updateMinGap(j->right,j);
+
 	free(t);
 	//printf("after free t and j=%d\n",j->number);
 	temp=findVictim(j);
@@ -954,7 +1085,7 @@ void preOrder(struct Node *t)
 {
 	if(t==NULL) 
 		return;
-	printf("%d    %d      %d\n",t->number,t->min,t->max);
+	printf("%d  %d\n",t->number,t->minGap);
 	preOrder(t->left);
 	preOrder(t->right);
 }
@@ -969,7 +1100,15 @@ void postOrder(struct Node *t)
 	printf("%d\n",t->number);
 }
 
+int findMaxGap(struct Node *t)
+{
+	return (t->max - t->min);
+}
 
+int findMinGap(struct Node *t)
+{
+	return (t->minGap);
+}
 int main()
 {
 	int ch,num,height,count;
@@ -987,6 +1126,8 @@ int main()
 		printf("10. Find prefix sum\n");*/
 		printf("11. Find sum of numbers between two numbers\n");
 		printf("12. Find average of numbers between two numbers\n");
+		printf("13. Find max gap\n");
+		printf("14. Find min gap\n");
 		printf("15. Exit\n");
 		printf("Enter your choice:");
 		scanf("%d",&ch);
@@ -1066,6 +1207,14 @@ int main()
 			printf("Enter second number :");
 			scanf("%d",&y);
 			printf("%f\n",computeAverageBetweenTwoNumbers(x,y));			
+		}
+		if(ch==13)
+		{
+			printf("Max gap of the tree :%d\n",findMaxGap(start));
+		}
+		if(ch==14)
+		{
+			printf("Min gap of the tree :%d\n",findMinGap(start));
 		}
 		if(ch==15)
 		{
