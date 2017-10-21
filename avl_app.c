@@ -166,16 +166,8 @@ void updateMinGap(struct Node *t,struct Node *parent)
 		}
 	//	printf("Gap %d----> min %d\n",gap[i],min);
 	}
-	int temp=parent->minGap;
-	if(temp==min)
-	{
-		return;
-	}
-	else
-	{
-		parent->minGap=min;
-		updateMinGap(parent,parent->parent);
-	}
+	parent->minGap=min;
+	updateMinGap(parent,parent->parent);
 }
 
 void balanceTree(struct Node *t,int num)
