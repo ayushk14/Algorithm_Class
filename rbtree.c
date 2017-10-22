@@ -45,11 +45,13 @@ void doubleRed(struct Node * t)
 	struct Node *g,*u,*p;
 	p=t->parent;
 	g=p->parent;
+	printf("g->number %d\n",g->number);
+	printf("p->nmumber %d\n",p->number);
 	if (p->position==0)
 		u=g->right;
 	else
 		u=g->left;
-	
+	if(u!=NULL) printf("u->number %d\n",u->number);
 	
 	//CASE 1...............
 	if (u!=NULL && u->isred==1)
@@ -59,7 +61,8 @@ void doubleRed(struct Node * t)
 		u->isred=0;
 		if (g!=start && g->isred==1)
 		{
-			doubleRed(g);
+			if(g->parent->isred==1) doubleRed(g);
+			else return;
 		}
 		else if (g==start)
 		{
@@ -169,6 +172,68 @@ void doubleRed(struct Node * t)
 		}
 	}
 }
+
+void addNode(int num)
+{
+	struct Node *t,*j;
+	t=(struct Node *)malloc(sizeof(struct Node));
+	t->number=num;
+	t->left=NULL;
+	t->right=NULL;
+	t->parent=NULL;
+	t->isred=1;
+	if(start==NULL)
+	{
+		start=t;
+		t->position=-1;
+		t->isred=0;
+		return;
+	}
+	j=start;
+	while(1)
+	{
+		if(t->number<j->number)
+		{
+			if(j->left==NULL)
+			{
+				j->left=t;
+				t->parent=j;
+				t->position=0;
+				t->isred=1;
+				if (t->parent->isred==1)
+				{
+					doubleRed(t);
+				}
+				return;
+			}
+			else
+			{
+				j=j->left;
+			}
+		}
+		else
+		{
+			if(j->right==NULL)
+			{
+				j->right=t;
+				t->parent=j;
+				t->position=1;
+				t->isred=1;
+				printf("%d\n",t->number);
+				if (t->parent->isred==1)
+				{
+					doubleRed(t);
+				}
+				return;
+			}
+			else
+			{
+				j=j->right;
+			}
+		}
+	}
+}
+
 
 /*void doubleBlack(struct Node * x, struct Node * p)
 {
@@ -323,66 +388,6 @@ void deleteNode(int num)
 		return;
 	}
 }*/
-
-void addNode(int num)
-{
-	struct Node *t,*j;
-	t=(struct Node *)malloc(sizeof(struct Node));
-	t->number=num;
-	t->left=NULL;
-	t->right=NULL;
-	t->parent=NULL;
-	if(start==NULL)
-	{
-		start=t;
-		t->parent=NULL;
-		t->position=-1;
-		t->isred=0;
-		return;
-	}
-	j=start;
-	while(1)
-	{
-		if(t->number<j->number)
-		{
-			if(j->left==NULL)
-			{
-				j->left=t;
-				t->parent=j;
-				t->position=0;
-				t->isred=1;
-				if (t->parent->isred==1)
-				{
-					doubleRed(t);
-				}
-				return;
-			}
-			else
-			{
-				j=j->left;
-			}
-		}
-		else
-		{
-			if(j->right==NULL)
-			{
-				j->right=t;
-				t->parent=j;
-				t->position=1;
-				t->isred=1;
-				if (t->parent->isred==1)
-				{
-					doubleRed(t);
-				}
-				return;
-			}
-			else
-			{
-				j=j->right;
-			}
-		}
-	}
-}
 
 
 void inOrder(struct Node *t)
