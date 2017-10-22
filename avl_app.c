@@ -13,7 +13,7 @@ struct Node
 	int max;
 	int minGap;
 };
-
+void preOrder(struct Node *);
 struct Node *start=NULL;
 
 int countNumberOfNodes(struct Node *t)
@@ -179,6 +179,7 @@ void balanceTree(struct Node *t,int num)
 		char *c=findRotationType(t,num);
 		if(strcmp("000",c)==0 || strcmp("100",c)==0)
 		{
+			printf("000 || 100\n");
 			int z=0;
 			p=t->left;
 			if(p->right==NULL)
@@ -239,6 +240,7 @@ void balanceTree(struct Node *t,int num)
 		}
 		else if(strcmp("111",c)==0 || strcmp("011",c)==0) 
 		{
+			printf("111 || 011\n");
 			int z=0;
 			p=t->right;
 			if(p->left==NULL)
@@ -293,6 +295,7 @@ void balanceTree(struct Node *t,int num)
 		}
 		else if(strcmp("010",c)==0 || strcmp("110",c)==0)
 		{
+			printf("010 || 110\n");
 			int x=0,y=0;
 			struct Node *q;
 			p=t->right;
@@ -320,23 +323,23 @@ void balanceTree(struct Node *t,int num)
 			q->max=p->max;
 			if(q->left!=NULL)
 			{
-				t->min=t->number;
+				//t->min=t->number;
 				t->max=q->left->max;
 			}
 			else
 			{
-				t->min=t->number;
+				//t->min=t->number;
 				t->max=t->number;
 			}
 			if(q->right!=NULL)
 			{
 				p->min=q->right->min;
-				p->max=p->number;
+				//p->max=p->number;
 			}
 			else
 			{
 				p->min=p->number;
-				p->max=p->number;
+				//p->max=p->number;
 			}
 			
 			
@@ -367,6 +370,7 @@ void balanceTree(struct Node *t,int num)
 				struct Node *yy=findVictim(o);
 				if(yy!=NULL )
 				{
+					printf("Second time start\n");
 					int x=findFeasibleNumber(yy);
 					balanceTree(yy,x);
 				}
@@ -374,6 +378,7 @@ void balanceTree(struct Node *t,int num)
 		}
 		else if(strcmp("001",c)==0 || strcmp("101",c)==0)
 		{
+			printf("001 || 101\n");
 			int x=0,y=0;
 			struct Node *q;
 			p=t->left;
@@ -401,23 +406,23 @@ void balanceTree(struct Node *t,int num)
 			q->max=t->max;
 			if(q->left!=NULL)
 			{
-				p->min=p->number;
+				//p->min=p->number;
 				p->max=q->left->max;
 			}
 			else
 			{
-				p->min=p->number;
+				//p->min=p->number;
 				p->max=p->number;
 			}
 			if(q->right!=NULL)
 			{
 				t->min=q->right->min;
-				t->max=t->number;
+				//t->max=t->number;
 			}
 			else
 			{
 				t->min=t->number;
-				t->max=t->number;
+				//t->max=t->number;
 			}
 			
 			q->position=t->position;
@@ -957,19 +962,18 @@ void removeNode(int num)
 	}
 
 	//printf("temp =%d\n",temp->number);
-	if (temp->left!=NULL)
-	{
-		temp->left->parent=temp->parent;
-		temp->parent->max=temp->left->max;
-	}
-	else
-	{
-		temp->parent->max=temp->parent->number;
-	}
-	//printf("One\n");
 	//printf("after temp->left!=null\n");
 	if (temp->parent!=t)
 	{
+		if(temp->left!=NULL)
+		{
+			temp->left->parent=temp->parent;
+			temp->parent->max=temp->left->max;
+		}
+		else
+		{
+			temp->parent->max=temp->parent->number;
+		}
 		changeCount(temp->parent);
 		changeSum(temp->parent,temp->number);
 			//changeSum(temp->parent,temp->number);
@@ -1043,7 +1047,6 @@ void removeNode(int num)
 	else
 		temp->minGap=temp->right->minGap;
 	updateMinGap(j->right,j);
-
 	free(t);
 	//printf("after free t and j=%d\n",j->number);
 	temp=findVictim(j);
@@ -1077,7 +1080,7 @@ void preOrder(struct Node *t)
 {
 	if(t==NULL) 
 		return;
-	printf("%d  %d\n",t->number,t->minGap);
+	printf("%d  %d\n",t->number,t->min);
 	preOrder(t->left);
 	preOrder(t->right);
 }
