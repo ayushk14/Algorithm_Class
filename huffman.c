@@ -27,7 +27,7 @@ void bottomHeapify()
 		
 		char c_temp=heap[i]->c;
 		heap[i]->c=heap[p]->c;
-		heap[p]->c=temp;
+		heap[p]->c=c_temp;
 		i=p;
 		p=(i-1)/2;
 	}
@@ -105,6 +105,13 @@ void buildHuffmanTree()
 	insert(t);	
 }
 
+void preOrder(struct Node *t)
+{
+	if(t==NULL) return;
+	printf("%d %c\n",t->freq,t->c);
+	preOrder(t->left);
+	preOrder(t->right);
+}
 
 int main()
 {
@@ -134,11 +141,17 @@ int main()
 		}
 		else if(ch==2)
 		{
-			buildHuffmanTree();
+			int i=0;
+			while(i<count-1)
+			{
+				buildHuffmanTree();				
+			}
+			preOrder(heap[0]);
 		}
 		else if (ch==3)
 		{
-			for (int i=0;i<count;i++)
+			int i;
+			for (i=0;i<count;i++)
 			{
 				printf("%d	%c\n",heap[i]->freq,heap[i]->c);
 			}
@@ -148,6 +161,5 @@ int main()
 			break;
 		}
 	}
-	printf("%d\t%d\n",heap[0]->left->freq,heap[0]->right->freq);
 	return 0;
 }
