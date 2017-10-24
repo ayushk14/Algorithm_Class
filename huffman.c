@@ -19,15 +19,12 @@ void bottomHeapify()
 {
 	int i=count-1;
 	int p=(i-1)/2;
+	struct Node *temp;
 	while (i>=0 && heap[i]->freq<heap[p]->freq)
 	{
-		int temp=heap[i]->freq;
-		heap[i]->freq=heap[p]->freq;
-		heap[p]->freq=temp;
-		
-		char c_temp=heap[i]->c;
-		heap[i]->c=heap[p]->c;
-		heap[p]->c=c_temp;
+		temp=heap[i];
+		heap[i]=heap[p];
+		heap[p]=temp;
 		i=p;
 		p=(i-1)/2;
 	}
@@ -38,6 +35,7 @@ void topDownHeapify(int i)
 	int l,r,minIndex;
 	l=2*i+1;
 	r=2*i+2;
+	struct Node *temp;
 	while(r<count)
 	{
 		if(heap[l]->freq<heap[r]->freq)
@@ -47,12 +45,9 @@ void topDownHeapify(int i)
 		else minIndex=r;
 		if(heap[i]->freq>heap[minIndex]->freq)
 		{
-			int t=heap[i]->freq;
-			heap[i]->freq=heap[minIndex]->freq;
-			heap[minIndex]->freq=t;
-			char c_temp=heap[i]->c;
-			heap[i]->c=heap[minIndex]->c;
-			heap[minIndex]->c=c_temp;
+			temp=heap[i];
+			heap[i]=heap[minIndex];
+			heap[minIndex]=temp;
 			i=minIndex;
 			l=2*i+1;
 			r=2*i+2;
@@ -61,12 +56,9 @@ void topDownHeapify(int i)
 	}
 	if(l==count-1 && heap[l]->freq<heap[i]->freq)
 	{
-		int t=heap[l]->freq;
-		heap[l]->freq=heap[i]->freq;
-		heap[i]->freq=t;
-		char c_temp=heap[l]->c;
-		heap[l]->c=heap[i]->c;
-		heap[i]->c=c_temp;
+		temp=heap[l];
+		heap[l]=heap[i];
+		heap[i]=temp;
 	}
 }
 
@@ -105,12 +97,12 @@ void buildHuffmanTree()
 	insert(t);	
 }
 
-void preOrder(struct Node *t)
+void traverse(struct Node *t)
 {
 	if(t==NULL) return;
 	printf("%d %c\n",t->freq,t->c);
-	preOrder(t->left);
-	preOrder(t->right);
+	traverse(t->left);
+	traverse(t->right);
 }
 
 int main()
@@ -142,11 +134,13 @@ int main()
 		else if(ch==2)
 		{
 			int i=0;
-			while(i<count-1)
+			int t=count-1;
+			while(i<t)
 			{
-				buildHuffmanTree();				
+				buildHuffmanTree();
+				i++;
 			}
-			preOrder(heap[0]);
+			traverse(heap[0]);
 		}
 		else if (ch==3)
 		{
