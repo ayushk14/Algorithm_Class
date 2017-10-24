@@ -105,16 +105,62 @@ void traverse(struct Node *t)
 	traverse(t->right);
 }
 
+int isLeaf(struct Node *t)
+{
+	if(t->left==NULL && t->right==NULL) return 1;
+	else return 0;
+}
+
+int *alphabetCode[26];
+int g=0;
+void copyCode(int code[],int size)
+{
+	alphabetCode[g]=(int *)malloc(sizeof(int)*(size+1));
+	int i=1,t=0;
+	alphabetCode[g][0]=size;
+	size++;
+	while(i<size)
+	{
+		alphabetCode[g][i]=code[t];
+		t++;
+		i++;
+	}
+	g++;
+}
+
+void findCode(struct Node *t,int code[],int size)
+{
+	if(t->left==NULL && t->right==NULL)
+	{
+		copyCode(code,size);
+		return;
+	}
+	if(t->left)
+	{
+		code[size]=0;
+		findCode(t->left,code,size+1);
+	}
+	if(t->right)
+	{
+		code[size]=1;
+		findCode(t->right,code,size+1);
+	}
+}
+
 int main()
 {
 	
 	int ch,num;
 	char c;
+	struct Node **inputData=(struct Node **)malloc(sizeof(struct Node *)*26);
+	int inputDataCount=0;
 	while(1)
 	{
 		printf("1. Add node\n");
 		printf("2. Build Huffman Tree\n");
 		printf("3. Print heap\n");
+		printf("4. Print codes\n");
+		printf("5. Compute final length of file\n");
 		printf("15. Exit\n");
 		printf("Enter your choice:");
 		scanf("%d",&ch);
@@ -135,12 +181,22 @@ int main()
 		{
 			int i=0;
 			int t=count-1;
+			inputDataCount=count;
+			while(i<count)
+			{
+				inputData[i]=heap[i];
+				i++;
+			}
+			i=0;
 			while(i<t)
 			{
 				buildHuffmanTree();
 				i++;
 			}
 			traverse(heap[0]);
+			int *code=(int *)malloc(sizeof(int)*10000);
+			int top=0;
+			findCode(heap[0],code,top);
 		}
 		else if (ch==3)
 		{
@@ -149,6 +205,36 @@ int main()
 			{
 				printf("%d	%c\n",heap[i]->freq,heap[i]->c);
 			}
+		}
+		else if(ch==4)
+		{
+			int i=0;
+			int j=0;
+			while(i<g)
+			{
+				j=alphabetCode[i][0];
+				j++;
+				int temp=1;
+				printf("%c ",inputData[i]->c);
+				while(temp<j)
+				{
+					printf("%d",alphabetCode[i][temp]);
+					temp++;
+				}
+				printf("\n");
+				i++;
+			}
+		}
+		else if(ch==5)
+		{
+			int i=0,j=0;
+			int sum=0;
+			while(i<inputDataCount)
+			{
+				sum=sum+inputData[i]->freq*alphabetCode[i][0];
+				i++;
+			}
+			printf("Compressed data length : %d\n",sum);
 		}
 		else if (ch==15)
 		{
