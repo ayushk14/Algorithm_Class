@@ -16,18 +16,24 @@ struct Node
 void preOrder(struct Node *);
 struct Node *start=NULL;
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int countNumberOfNodes(struct Node *t)
 {
 	if(t==NULL) return 0;
 	return 1+countNumberOfNodes(t->left)+countNumberOfNodes(t->right);
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findSum(struct Node *t)
 {
 	if(t==NULL) return 0;
 	return t->number+findSum(t->left)+findSum(t->right);
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findHeight(struct Node *t)
 {
 	if(t==NULL) 
@@ -43,6 +49,8 @@ int findHeight(struct Node *t)
 		return rh+1;
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 char * findRotationType(struct Node * victim, int num)
 {
 	char *rotationString=(char *)malloc(sizeof(char)*3);
@@ -71,6 +79,8 @@ char * findRotationType(struct Node * victim, int num)
 	return rotationString;
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 struct Node * findVictim(struct Node *t)
 {
 	int lh,rh,difference;
@@ -95,6 +105,8 @@ struct Node * findVictim(struct Node *t)
 	return t;
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findFeasibleNumber(struct Node *t)
 {
 	int lh,rh,lh1,rh1;
@@ -132,6 +144,8 @@ int findFeasibleNumber(struct Node *t)
 	}
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void updateMinGap(struct Node *t,struct Node *parent)
 {
 	if(parent==NULL) return;
@@ -170,6 +184,8 @@ void updateMinGap(struct Node *t,struct Node *parent)
 	updateMinGap(parent,parent->parent);
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void balanceTree(struct Node *t,int num)
 {
 	struct Node *p,*o;
@@ -464,6 +480,8 @@ void balanceTree(struct Node *t,int num)
 	}
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int nodeRank(int x,struct Node *t)
 {
 	int rank=1;
@@ -496,6 +514,8 @@ int nodeRank(int x,struct Node *t)
 	return rank;
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findRank(int x,struct Node *t)
 {
 	while(t)
@@ -519,6 +539,8 @@ int findRank(int x,struct Node *t)
 	return -1;
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 int numberOfElementsBetweenTwoNumbers(int x,int y,int hasIncludedX,int hasIncludedY)
 {
 	int xRank,yRank,difference;
@@ -569,6 +591,9 @@ int numberOfElementsBetweenTwoNumbers(int x,int y,int hasIncludedX,int hasInclud
 	return difference;
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findPrefixSum(int x)
 {
 	int s=0;
@@ -602,6 +627,9 @@ int findPrefixSum(int x)
 	return s;
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 int computeSumBetweenTwoNumbers(int x,int y)
 {
 	int prefixSumOfX,prefixSumOfY;
@@ -610,6 +638,9 @@ int computeSumBetweenTwoNumbers(int x,int y)
 	return abs(prefixSumOfY-prefixSumOfX);
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 float computeAverageBetweenTwoNumbers(x,y)
 {
 	int sum=computeSumBetweenTwoNumbers(x,y);
@@ -617,6 +648,8 @@ float computeAverageBetweenTwoNumbers(x,y)
 	return sum/numberOfNodes;
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void addNode(int num)
 {
 	struct Node *t,*j;
@@ -719,6 +752,8 @@ void addNode(int num)
 	}
 }
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void changeCount(struct Node *t)
 {
 	while(t)
@@ -728,6 +763,9 @@ void changeCount(struct Node *t)
 	}
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 void changeSum(struct Node *t,int num)
 {
 	while(t)
@@ -737,6 +775,9 @@ void changeSum(struct Node *t,int num)
 	}
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 void updateMinMax(struct Node *t,int position,int num)
 {
 	struct Node *j=t;
@@ -759,6 +800,8 @@ void updateMinMax(struct Node *t,int position,int num)
 }
 
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void removeNode(int num)
 {
 	struct Node * t,*j;
@@ -1066,6 +1109,7 @@ void removeNode(int num)
 
 
 
+//--------------------------------------FUNCTION---------------------------------------------
 void inOrder(struct Node *t)
 {
 	if(t==NULL) 
@@ -1076,6 +1120,8 @@ void inOrder(struct Node *t)
 }
 
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void preOrder(struct Node *t)
 {
 	if(t==NULL) 
@@ -1086,6 +1132,8 @@ void preOrder(struct Node *t)
 }
 
 
+
+//--------------------------------------FUNCTION---------------------------------------------
 void postOrder(struct Node *t)
 {
 	if(t==NULL) 
@@ -1095,15 +1143,25 @@ void postOrder(struct Node *t)
 	printf("%d\n",t->number);
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findMaxGap(struct Node *t)
 {
 	return (t->max - t->min);
 }
 
+
+
+//--------------------------------------FUNCTION---------------------------------------------
 int findMinGap(struct Node *t)
 {
 	return (t->minGap);
 }
+
+
+
+//--------------------------------------MAIN FUNCTION---------------------------------------------
 int main()
 {
 	int ch,num,height,count;
