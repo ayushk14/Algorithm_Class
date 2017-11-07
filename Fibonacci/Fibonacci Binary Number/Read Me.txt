@@ -1,0 +1,10 @@
+Problem Statement : Program to find the modulo fo Fibonacci Series for nth number where n have 100000 digits given in binary.
+
+solution : 
+
+Take n in array of integer size 100000 then generate the random binary number using Random Class.
+Now problem is to find the n is even or odd.
+To find even or odd we have simply check mark our index = len-1 
+if index is 0 then it is even
+if index is 1 then it is odd
+now decrement the index till 0.

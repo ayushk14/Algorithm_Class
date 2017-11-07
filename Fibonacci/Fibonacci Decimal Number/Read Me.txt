@@ -1,0 +1,9 @@
+Problem Statement : Program to find the modulo fo Fibonacci Series for nth number where n have 100000 digits given in decimal.
+
+solution : 
+
+Take n in array of integer size 100000.
+Now problem is to find the n is even or odd.
+To find even or odd we have written divideby2 function
+This Function basically divide the number stored in array and return the number of 0's left in it.
+if the number of 0's in array ==  length of array then our program terminates.
